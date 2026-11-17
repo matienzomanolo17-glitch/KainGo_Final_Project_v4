@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Promos{% endblock %}
+{% block content %}
+<h2>Promos</h2>
+<div class="row g-4">
+  <div class="col-lg-5"><div class="card p-4">
+    <h5>{{ 'Edit promo' if editing else 'Add promo' }}</h5>
+    <form method="post" action="{{ url_for('admin_promos', id=editing) if editing else url_for('admin_promos') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="row g-2 mb-2">
+        <div class="col-5"><label class="form-label">Code</label><input class="form-control" name="code" value="{{ form.code }}" maxlength="20" required></div>
+        <div class="col-7"><label class="form-label">Title</label><input class="form-control" name="title" value="{{ form.title }}" maxlength="80" required></div>
+      </div>
+      <label class="form-label">Description</label><input class="form-control mb-2" name="description" value="{{ form.description }}" maxlength="200">
+      <div class="row g-2 mb-2">
+        <div class="col-6"><label class="form-label">Type</label><select class="form-select" name="discount_type">
+          <option value="percent" {{ 'selected' if form.discount_type == 'percent' }}>Percent %</option>
+          <option value="fixed" {{ 'selected' if form.discount_type == 'fixed' }}>Fixed ₱</option></select></div>
+        <div class="col-6"><label class="form-label">Value</label><input type="number" step="0.01" min="1" class="form-control" name="discount_value" value="{{ form.discount_value }}" required></div>
+      </div>
+      <label class="form-label">Minimum spend (₱)</label><input type="number" step="0.01" min="0" class="form-control mb-2" name="min_spend" value="{{ form.min_spend }}">
+      <div class="row g-2 mb-2">
+        <div class="col-6"><label class="form-label">Start date</label><input type="date" class="form-control" name="start_date" value="{{ form.start_date or '' }}"></div>
+        <div class="col-6"><label class="form-label">End date</label><input type="date" class="form-control" name="end_date" value="{{ form.end_date or '' }}"></div>
+      </div>
+      <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="active" id="ac" {{ 'checked' if form.active }}><label class="form-check-label" for="ac">Active</label></div>
+      <button class="btn btn-kg">Save</button> {% if editing %}<a href="{{ url_for('admin_promos') }}" class="btn btn-link">Cancel</a>{% endif %}
+    </form>
+  </div></div>
+  <div class="col-lg-7"><div class="table-responsive"><table class="table align-middle table-hover">
+    <thead><tr><th>Promo</th><th>Discount</th><th>Status</th><th></th></tr></thead>
+    <tbody>{% for p in promos %}
+      <tr><td><span class="badge bg-warning text-dark">{{ p.code }}</span><br>{{ p.title }}</td>
+        <td>{% if p.discount_type == 'percent' %}{{ p.discount_value|float|round|int }}%{% else %}₱{{ p.discount_value|float|round|int }}{% endif %}<br><span class="small text-muted">min ₱{{ p.min_spend|float|round|int }}</span></td>
+        <td>{% if p.is_running() %}<span class="badge bg-success">Running</span>{% else %}<span class="badge bg-secondary">Off</span>{% endif %}</td>
+        <td class="text-end"><a class="btn btn-sm btn-outline-dark" href="{{ url_for('admin_promos', id=p.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('promo_delete', promo_id=p.id) }}" class="d-inline" onsubmit="return confirm('Delete this promo?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-danger">Delete</button></form></td></tr>
+    {% endfor %}</tbody></table></div></div>
+</div>
+{% endblock %}

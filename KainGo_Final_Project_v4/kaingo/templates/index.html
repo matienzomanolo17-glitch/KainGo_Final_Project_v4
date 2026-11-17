@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero text-center text-white rounded-4 p-5 mb-4">
+  <img src="{{ url_for('static', filename='logo.svg') }}" width="90" alt="{{ BRAND }}">
+  <h1 class="display-5 fw-bold mt-3">Order. Confirm. Track.</h1>
+  <p class="lead">Order from {{ RESTAURANT }} online, grab promos, and watch your order go from the kitchen to your door.</p>
+  {% if current_user %}
+    <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-lg">Go to Dashboard</a>
+  {% else %}
+    <a href="{{ url_for('register') }}" class="btn btn-light btn-lg me-2">Create Account</a>
+    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">Login</a>
+  {% endif %}
+</section>
+
+<div class="row g-3 text-center mb-4">
+  <div class="col-md-4"><div class="card h-100 p-3"><div class="fs-1">🍽️</div><h5>Easy ordering</h5><p class="text-muted mb-0">Tap the food you want, choose Delivery (COD) or Pickup (Cash), and place your order.</p></div></div>
+  <div class="col-md-4"><div class="card h-100 p-3"><div class="fs-1">📞</div><h5>Call confirmation</h5><p class="text-muted mb-0">The restaurant calls you first. Your order goes ahead once you confirm it on the call.</p></div></div>
+  <div class="col-md-4"><div class="card h-100 p-3"><div class="fs-1">🛵</div><h5>Order tracking</h5><p class="text-muted mb-0">Follow your order: Confirmed, Preparing, Out for Delivery, Delivered.</p></div></div>
+</div>
+
+<h3 class="mb-3">Current Promos</h3>
+<div class="row g-3">
+  {% for p in promos %}
+  <div class="col-md-6"><div class="card promo-card p-3"><span class="badge bg-warning text-dark mb-2 align-self-start">Code: {{ p.code }}</span>
+    <h5>{{ p.title }}</h5><p class="mb-0 text-muted">{{ p.description }}</p></div></div>
+  {% else %}<p class="text-muted">No promos right now. Check back soon!</p>{% endfor %}
+</div>
+{% endblock %}

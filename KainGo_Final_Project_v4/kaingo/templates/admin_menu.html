@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Menu{% endblock %}
+{% block content %}
+<h2>Menu Items</h2>
+<div class="row g-4">
+  <div class="col-lg-5"><div class="card p-4">
+    <h5>{{ 'Edit item' if editing else 'Add item' }}</h5>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('admin_menu', id=editing) if editing else url_for('admin_menu') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="form-label">Name</label><input class="form-control mb-2" name="name" value="{{ form.name }}" maxlength="80" required>
+      <label class="form-label">Category</label><input class="form-control mb-2" name="category" value="{{ form.category }}" maxlength="40" placeholder="Rice Meals, Drinks, ..." required>
+      <div class="row g-2 mb-2">
+        <div class="col-6"><label class="form-label">Price (₱)</label><input type="number" step="0.01" min="1" class="form-control" name="price" value="{{ form.price }}" required></div>
+        <div class="col-6"><label class="form-label">Emoji</label><input class="form-control" name="emoji" value="{{ form.emoji }}" maxlength="8"></div>
+      </div>
+      <label class="form-label">Dish photo (PNG, JPG or WEBP, max 2 MB)</label>
+      {% if form.image %}<div class="mb-1"><img src="{{ url_for('static', filename='img/menu/' ~ form.image) }}" class="menu-thumb" alt=""> <small class="text-muted">current photo</small></div>{% endif %}
+      <input type="file" class="form-control mb-1" name="image" accept=".png,.jpg,.jpeg,.webp"><div class="form-text mb-2">Without a photo, the emoji is shown instead.</div>
+      <label class="form-label">Description</label><input class="form-control mb-2" name="description" value="{{ form.description }}" maxlength="200">
+      <label class="form-label">Choices (optional)</label><input class="form-control" name="choices" value="{{ form.choices }}" maxlength="500" placeholder="Main:Pares|Mami;Drink:Iced Tea|Softdrink">
+      <div class="form-text mb-2">The customer must pick one option in each group before adding the food. Format: Group:Option|Option;Group:Option|Option</div>
+      <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="available" id="av" {{ 'checked' if form.available }}><label class="form-check-label" for="av">Available for ordering</label></div>
+      <button class="btn btn-kg">Save</button> {% if editing %}<a href="{{ url_for('admin_menu') }}" class="btn btn-link">Cancel</a>{% endif %}
+    </form>
+  </div></div>
+  <div class="col-lg-7"><div class="table-responsive"><table class="table align-middle table-hover">
+    <thead><tr><th></th><th>Name</th><th>Price</th><th></th></tr></thead>
+    <tbody>{% for i in items %}
+      <tr><td class="fs-3">{% if i.image %}<img src="{{ url_for('static', filename='img/menu/' ~ i.image) }}" class="menu-thumb" alt="">{% else %}{{ i.emoji }}{% endif %}</td><td>{{ i.name }}<br><span class="small text-muted">{{ i.category }}{{ '' if i.available else ' · hidden' }}</span>{% if i.choices %} <span class="badge bg-success">has choices</span>{% endif %}</td>
+        <td>₱{{ '%.2f'|format(i.price|float) }}</td>
+        <td class="text-end"><a class="btn btn-sm btn-outline-dark" href="{{ url_for('admin_menu', id=i.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('menu_delete', item_id=i.id) }}" class="d-inline" onsubmit="return confirm('Delete this item?')">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-sm btn-outline-danger">Delete</button></form></td></tr>
+    {% endfor %}</tbody></table></div></div>
+</div>
+{% endblock %}

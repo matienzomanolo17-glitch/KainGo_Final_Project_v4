@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+{% if current_user.is_admin %}
+  <h2>Store Dashboard</h2>
+  <div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card stat border-warning"><div class="n">{{ stats.pending_calls }}</div>Calls to make</div></div>
+    <div class="col-md-4"><div class="card stat"><div class="n">{{ stats.active }}</div>Orders in progress</div></div>
+    <div class="col-md-4"><div class="card stat"><div class="n">{{ stats.today }}</div>Orders today</div></div>
+  </div>
+  <div class="card p-3 mb-3">
+    <h4>📞 Waiting for confirmation call</h4>
+    {% if pending %}
+    <div class="table-responsive"><table class="table align-middle mb-0">
+      <thead><tr><th>#</th><th>Customer</th><th>Contact</th><th>Total</th><th></th></tr></thead>
+      <tbody>{% for o in pending %}
+        <tr><td>{{ o.id }}</td><td>{{ o.firstname }} {{ o.lastname }}</td><td><a href="tel:{{ o.contact }}">{{ o.contact }}</a></td>
+          <td>₱{{ '%.2f'|format(o.total|float) }}</td><td><a class="btn btn-sm btn-kg" href="{{ url_for('admin_orders', status='Pending Call') }}">Call now</a></td></tr>
+      {% endfor %}</tbody></table></div>
+    {% else %}<p class="text-muted mb-0">No calls to make right now. 🎉</p>{% endif %}
+  </div>
+  <a class="btn btn-kg" href="{{ url_for('admin_orders') }}">Manage Orders</a>
+  <a class="btn btn-outline-dark" href="{{ url_for('admin_menu') }}">Manage Menu</a>
+  <a class="btn btn-outline-dark" href="{{ url_for('admin_promos') }}">Manage Promos</a>
+{% else %}
+  <h2>Hello, {{ current_user.firstname }}! 👋</h2>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3"><div class="card stat"><div class="n">{{ stats.total }}</div>Total orders</div></div>
+    <div class="col-6 col-md-3"><div class="card stat"><div class="n">{{ stats.active }}</div>Active orders</div></div>
+    <div class="col-6 col-md-3"><div class="card stat"><div class="n">{{ promos|length }}</div>Promos available</div></div>
+    <div class="col-6 col-md-3"><a href="{{ url_for('order_now') }}" class="btn btn-kg h-100 w-100 d-flex align-items-center justify-content-center fs-5">🍽️ Order Now</a></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7"><h4>Recent orders</h4>{% include "_orders_table.html" %}</div>
+    <div class="col-lg-5"><h4>Promos for you</h4>
+      {% for p in promos %}<div class="card promo-card p-3 mb-2"><span class="badge bg-warning text-dark align-self-start mb-1">{{ p.code }}</span><strong>{{ p.title }}</strong><span class="text-muted">{{ p.description }}</span></div>
+      {% else %}<p class="text-muted">No promos right now.</p>{% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

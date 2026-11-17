@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h2>Orders</h2>
+<div class="mb-3 d-flex flex-wrap gap-2">
+  <a href="{{ url_for('admin_orders') }}" class="btn btn-sm {{ 'btn-dark' if not selected else 'btn-outline-dark' }}">All</a>
+  {% for s in statuses %}<a href="{{ url_for('admin_orders', status=s) }}" class="btn btn-sm {{ 'btn-dark' if selected == s else 'btn-outline-dark' }}">{{ s }}</a>{% endfor %}
+</div>
+{% if orders %}
+<div class="table-responsive"><table class="table align-middle table-hover">
+  <thead><tr><th>#</th><th>Customer</th><th>Order</th><th>Status</th><th>Action</th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+  <tr>
+    <td><a href="{{ url_for('order_detail', order_id=o.id) }}">#{{ o.id }}</a></td>
+    <td>{{ o.firstname }} {{ o.lastname }}<br><a href="tel:{{ o.contact }}" class="small">📞 {{ o.contact }}</a></td>
+    <td>₱{{ '%.2f'|format(o.total|float) }}<br><span class="small text-muted">{{ o.order_type }} · {{ o.payment_method }}</span></td>
+    <td><span class="badge status-{{ o.status|replace(' ', '') }}">{{ o.label() }}</span>
+      {% if o.status == 'Pending Call' %}<br><span class="small text-muted">Call: {{ o.call_status }} ({{ o.call_attempts }}/{{ MAX_CALLS }})</span>{% endif %}</td>
+    <td>
+      <form method="post" action="{{ url_for('order_action', order_id=o.id) }}" class="d-flex flex-wrap gap-1" onsubmit="return confirm('Are you sure?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="filter" value="{{ selected }}">
+        {% if o.status == 'Pending Call' %}
+          <a href="tel:{{ o.contact }}" class="btn btn-sm btn-outline-success">Call</a>
+          <button name="action" value="confirmed" class="btn btn-sm btn-success">Confirmed</button>
+          <button name="action" value="no_answer" class="btn btn-sm btn-warning">No answer</button>
+          <button name="action" value="declined" class="btn btn-sm btn-danger">Declined</button>
+        {% elif o.next_status() %}
+          <button name="action" value="next" class="btn btn-sm btn-kg">→ {{ o.label(o.next_status()) }}</button>
+          <button name="action" value="cancel" class="btn btn-sm btn-outline-danger">Cancel</button>
+        {% else %}
+          <button name="action" value="delete" class="btn btn-sm btn-outline-secondary">Delete</button>
+        {% endif %}
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody></table></div>
+{% else %}<p class="text-muted">Nothing here. 🎉</p>{% endif %}
+{% endblock %}

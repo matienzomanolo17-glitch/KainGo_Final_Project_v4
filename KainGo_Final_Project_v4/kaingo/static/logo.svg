@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="KainGo logo">
+  <defs>
+    <clipPath id="disc"><circle cx="100" cy="100" r="91"/></clipPath>
+    <radialGradient id="glow" cx="50%" cy="62%" r="55%">
+      <stop offset="0" stop-color="#ffb74d" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#ffb74d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- bamboo-green badge -->
+  <circle cx="100" cy="100" r="98" fill="#fbf6e6"/>
+  <circle cx="100" cy="100" r="93" fill="#2e7d32"/>
+  <g clip-path="url(#disc)">
+    <g fill="#388e3c">
+      <rect x="9" y="0" width="22" height="200"/><rect x="55" y="0" width="22" height="200"/><rect x="101" y="0" width="22" height="200"/>
+      <rect x="147" y="0" width="22" height="200"/>
+    </g>
+    <g fill="#1b5e20" opacity=".55">
+      <rect x="9" y="52" width="22" height="3"/><rect x="32" y="128" width="22" height="3"/><rect x="55" y="40" width="22" height="3"/>
+      <rect x="78" y="150" width="22" height="3"/><rect x="101" y="62" width="22" height="3"/><rect x="124" y="136" width="22" height="3"/>
+      <rect x="147" y="48" width="22" height="3"/><rect x="170" y="120" width="22" height="3"/>
+    </g>
+    <circle cx="100" cy="110" r="72" fill="#14451a" opacity=".55"/>
+    <circle cx="100" cy="120" r="72" fill="url(#glow)"/>
+  </g>
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#fbf6e6" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>
+
+  <!-- banana leaves -->
+  <path d="M26 150C42 122 72 128 74 162 52 170 32 162 26 150Z" fill="#7cb342"/>
+  <path d="M174 150C158 122 128 128 126 162 148 170 168 162 174 150Z" fill="#689f38"/>
+
+  <!-- firewood -->
+  <rect x="58" y="158" width="86" height="12" rx="6" fill="#5d3a1a" transform="rotate(-8 100 164)"/>
+  <rect x="58" y="158" width="86" height="12" rx="6" fill="#7b4a22" transform="rotate(8 100 164)"/>
+
+  <!-- flames (behind the pot) -->
+  <path d="M100 168C62 160 62 124 88 98 86 118 100 120 98 100 128 118 140 152 100 168Z" fill="#f08a00"/>
+  <path d="M100 166C84 158 84 140 98 126 102 140 114 146 100 166Z" fill="#ffd43b"/>
+  <path d="M70 160C58 150 62 134 72 128 72 140 80 144 70 160Z" fill="#f08a00"/>
+  <path d="M130 160C142 150 138 134 128 128 128 140 120 144 130 160Z" fill="#f08a00"/>
+
+  <!-- cooking pot -->
+  <g transform="translate(0,-9)">
+  <path d="M58 80H142C142 116 128 136 100 136 72 136 58 116 58 80Z" fill="#2b1a10"/>
+  <path d="M70 92C72 110 80 122 92 128" fill="none" stroke="#6d4a33" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
+  <rect x="52" y="73" width="96" height="11" rx="5.5" fill="#3d2616"/>
+  <path d="M52 84C38 84 36 96 46 102" fill="none" stroke="#2b1a10" stroke-width="5" stroke-linecap="round"/>
+  <path d="M148 84C162 84 164 96 154 102" fill="none" stroke="#2b1a10" stroke-width="5" stroke-linecap="round"/>
+
+  </g>
+
+  <!-- steam -->
+  <g transform="translate(0,-4)" fill="none" stroke="#fbf6e6" stroke-width="4.5" stroke-linecap="round">
+    <path d="M80 66C70 58 90 52 80 40"/><path d="M100 62C90 54 110 48 100 34"/><path d="M120 66C110 58 130 52 120 40"/>
+  </g>
+</svg>
